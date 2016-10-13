@@ -7,26 +7,26 @@
 #include "windows.h"
 using namespace std;
 
-class Account
+class Account // mother class 
 {
-public:
+public: //initialize variables 
 	int accountNum;
 	double interest; 
 	double balance;
 
-public: Account()
+public: Account()// set intial values for the variables
 	{
 		accountNum = 0;
 		interest = 0;
 		balance = 0;
 	}
-public:
+public: //functions that will be inherited
 	void display();
 	void add_new();
 	int withdraw();
 };
 
-void Account::add_new()
+void Account::add_new() // function description
 {
 	cout << "Enter account Number: ";
 	cin >> accountNum;
@@ -36,14 +36,13 @@ void Account::add_new()
 	cin.ignore();
 }
 
-void Account::display()
+void Account::display() // fumction description
 {
-	cout << "Account: " << accountNum << endl;
-	cout << "Balance: " << balance << endl;
+	cout << "Account: " << accountNum << " Balance: " << balance << endl;
 	cout << " " << endl;
 }
 
-int Account::withdraw()
+int Account::withdraw() // function description
 { 
 	double withdraw;
 	cout << "Enter amount you want to withdraw: " << endl;
@@ -64,7 +63,7 @@ int Account::withdraw()
 }
 
 
-class Savings : public Account
+class Savings : public Account //a class that inherites from the account class
 {
 	double varint;
 	double calcSav()
@@ -84,7 +83,7 @@ class Savings : public Account
 	}
 };
 
-class Checking : public Account 
+class Checking : public Account // a class that inherits from the account class
 {
 	void calcCheck()
 	{
@@ -100,7 +99,7 @@ class Checking : public Account
 	}
 };
 
-class Cd : public Account
+class Cd : public Account // class that inherirates from the account class
 {
 	int term;
 	void getTerm()
@@ -126,9 +125,9 @@ class Cd : public Account
 
 int main()
 {
-	int i = 1;
 	bool answer = true;
 	char response;
+	Account myAccount;
 	do 
 	{
 		system("cls");
@@ -139,7 +138,7 @@ int main()
 		cout << "What do you want to do?" << endl;
 		cout << "-----------------------" << endl;
 		cout << "A. Create a new account" << endl;
-		cout << "B. Display accounts" << endl;
+		cout << "B. Display account" << endl;
 		cout << "C. Withdraw" << endl;
 		cout << "D. Quit" << endl;
 		cin >> response;
@@ -163,6 +162,7 @@ int main()
 			{
 				system("cls");
 				cout << "New Savings Account" << endl;
+				myAccount.add_new();
 				system ("pause");
 				i++;
 			}
@@ -170,6 +170,7 @@ int main()
 			{
 				system("cls");
 				cout << "New Checking Account" << endl;
+				myAccount.add_new();
 				system("pause");
 				i++;
 			}
@@ -177,6 +178,7 @@ int main()
 			{
 				system("cls");
 				cout << "New Certificate of Deposit" << endl;
+				myAccount.add_new();
 				system("pause");
 				i++;
 			}
@@ -184,6 +186,7 @@ int main()
 			{
 				system("cls");
 				cout << "Data entry cancelled!" << endl;
+				myAccount.add_new();
 				system("pause");
 			}
 			else
@@ -198,14 +201,16 @@ int main()
 		else if ((response == 'B') || (response == 'b'))
 		{
 			system("cls");
-			cout << " b" << endl;
+			cout << "Current Account" << endl;
+			myAccount.display();
 			system("pause");
 			answer = true;
 		}
 		else if ((response == 'C') || (response == 'c'))
 		{
 			system("cls");
-			cout << " c" << endl;
+			cout << "Withdraw" << endl;
+			myAccount.withdraw();
 			system("pause");
 			answer = true;
 		}
