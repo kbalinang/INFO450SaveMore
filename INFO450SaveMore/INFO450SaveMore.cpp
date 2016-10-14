@@ -1,6 +1,11 @@
 // INFO450SaveMore.cpp : Defines the entry point for the console application.
 //
 
+//The role of inheritance is to be able to reduce redundancy when writing code. It alows classes to get general attritubutes without having to
+//restate them in individual classes themselves. This saves time for the progammer and makes it easier to see the relationships of the clases 
+//themselves. 
+
+/*Project By Kristoffer Louie Balinang*/
 #include "stdafx.h"
 #include <iostream>
 #include <stdio.h>
@@ -13,50 +18,57 @@ public: //initialize variables
 	int accountNum;
 	double interest; 
 	double balance;
+	char *Type;
 
 public: Account()// set intial values for the variables
 	{
-		accountNum = 0;
+		accountNum = 450;
 		interest = 0;
 		balance = 0;
 	}
 public: //functions that will be inherited
-	void display();
-	void add_new();
-	int withdraw();
+	virtual int deposit(double d);
+	virtual void display();
+	virtual int withdraw(double w);
 };
 
-void Account::add_new() // function description
+int Account::deposit(double d) // function description
 {
-	cout << "Enter account Number: ";
-	cin >> accountNum;
-	cout << "How much do you want to Deposit: ";
-	cin >> balance;
-	cin.clear();
-	cin.ignore();
+	if (d > 0)
+	{
+		balance = d + balance;
+			return 0;
+	}
+	else
+	{
+		cout << "<ALERT> Cannot have a negative deposit!";
+			return -1;
+	}
 }
 
 void Account::display() // fumction description
 {
-	cout << "Account: " << accountNum << " Balance: " << balance << endl;
 	cout << " " << endl;
+	cout << "<Display> " << endl;
+	cout << "Account Number: " << accountNum << endl;
+	cout << "Account Type: " << Type << endl;
+	cout << "Balance: " << balance << endl;
+	cout << "Interest: " << interest << endl;
 }
 
-int Account::withdraw() // function description
+int Account::withdraw(double w) // function description
 { 
-	double withdraw;
-	cout << "Enter amount you want to withdraw: " << endl;
-	cin >> withdraw;
-	balance = balance - withdraw;
+	balance = balance - w;
 	if (balance < 0)
 	{
 		cout << "<ALERT> Withdraw ammount is too high! Please try again." << endl;
-		balance = balance + withdraw;
+		balance = balance + w;
 		return 0;
 	}
 	else
 	{
 		cout << "Withdraw is succesful! Thank you for using SaveMore!" << endl;
+		cout << "  " << endl;
 		cout << "Your balance is now: " << balance << endl;
 		return 1;
 	}
@@ -65,10 +77,15 @@ int Account::withdraw() // function description
 
 class Savings : public Account //a class that inherites from the account class
 {
+public:
+	Savings()
+	{
+		Type = "Savings"; 
+	}
 	double varint;
 	double calcSav()
 	{
-		if (balance < 10000)
+		if (balance >= 10000)
 		{
 			interest = .02;
 		}
@@ -76,38 +93,52 @@ class Savings : public Account //a class that inherites from the account class
 		{
 			interest = .01;
 		}
-		varint = balance * interest;
-		balance = balance + (balance* varint);
-		balance = balance - 2;
 		return balance;
 	}
 };
 
 class Checking : public Account // a class that inherits from the account class
 {
+public:
+	Checking()
+	{
+		Type = "Checking";
+	}
 	void calcCheck()
 	{
 		if (balance < 500)
 		{
-			interest = 5;
+			balance -= 5;
 		}
-		else
-		{
-			interest = 0;
-		}
-		balance = balance - interest;
+	}
+	double orderCheck(int order)
+	{
+		balance = balance - (order * 15.00);
+			if (balance <0)
+			{
+				cout << "Cannot order that many checks" << endl;
+				balance = balance + (order * 15.00);
+				return balance;
+			    
+			}
+			else
+			{
+				cout << "Order sucessful!" << endl;
+				return balance;
+			}
 	}
 };
 
 class Cd : public Account // class that inherirates from the account class
 {
-	int term;
-	void getTerm()
-	{
-		cout << "How many terms would you like: " << endl;
-		cin >> term;
-	}
-	void calcCd()
+
+public: 
+	Cd()
+{
+	Type = " Certificate of deposit";
+}
+	
+	void calcCd(int term)
 	{
 		if (term >= 5)
 		{
@@ -125,111 +156,83 @@ class Cd : public Account // class that inherirates from the account class
 
 int main()
 {
-	bool answer = true;
-	char response;
-	Account myAccount;
-	do 
-	{
-		system("cls");
-		cout << "Project By Kristoffer Balinang" << endl;
-		cout << " " << endl;
-		cout << "Welcome to Save-More banking service" << endl;
-		cout << "------------------------------------" << endl;
-		cout << "What do you want to do?" << endl;
-		cout << "-----------------------" << endl;
-		cout << "A. Create a new account" << endl;
-		cout << "B. Display account" << endl;
-		cout << "C. Withdraw" << endl;
-		cout << "D. Quit" << endl;
-		cin >> response;
-		cout << " " << endl;
+	int d;
+	int w;
+	int term;
+	int order;
 
-		if ((response == 'A') || (response == 'a'))
-		{
-			static int i; 
-			char response; 
-			system("cls");
-			cout << "What type of account would you like to add?" << endl;
-			cout << "-------------------------------------------" << endl;
-			cout << "A. Savings" << endl;
-			cout << "B. Checking" << endl;
-			cout << "C. Certificate of deposit" << endl;
-			cout << "D. Main menu" << endl;
-			cin >> response;
-			cout << " " << endl;
+	Savings SavingsAccount;
+	Checking CheckingAccount;
+	Cd CdAccount;
 
-			if ((response == 'A') || (response == 'a'))
-			{
-				system("cls");
-				cout << "New Savings Account" << endl;
-				myAccount.add_new();
-				system ("pause");
-				i++;
-			}
-			else if ((response == 'B') || (response == 'b'))
-			{
-				system("cls");
-				cout << "New Checking Account" << endl;
-				myAccount.add_new();
-				system("pause");
-				i++;
-			}
-			else if ((response == 'c') || (response == 'C'))
-			{
-				system("cls");
-				cout << "New Certificate of Deposit" << endl;
-				myAccount.add_new();
-				system("pause");
-				i++;
-			}
-			else if  ((response == 'D') || (response == 'd'))
-			{
-				system("cls");
-				cout << "Data entry cancelled!" << endl;
-				myAccount.add_new();
-				system("pause");
-			}
-			else
-			{
-				system("cls");
-				cout << "<ALERT> invalid entry. Please Try Again" << endl;
-				system("pause");
-			}
+	cout << "Project By Kristoffer Balinang" << endl;
+	cout << " " << endl;
+	cout << "Welcome to Save-More banking service" << endl;
+	cout << "------------------------------------" << endl;
+	cout << "Creating bank accounts" << endl;
+	system("pause");
+	system("cls");
+	cout << "Enter deposit for savings account:" << endl;
+	cin >> d;
+	SavingsAccount.deposit(d);
+	system("pause");
+	system("cls");
+	cout << "Interest for Savings account Calculated: " << endl;
+	SavingsAccount.calcSav();
+	SavingsAccount.display();
 
-			answer = true;
-		}
-		else if ((response == 'B') || (response == 'b'))
-		{
-			system("cls");
-			cout << "Current Account" << endl;
-			myAccount.display();
-			system("pause");
-			answer = true;
-		}
-		else if ((response == 'C') || (response == 'c'))
-		{
-			system("cls");
-			cout << "Withdraw" << endl;
-			myAccount.withdraw();
-			system("pause");
-			answer = true;
-		}
-		else if ((response == 'D') || (response == 'd'))
-		{
-			system("cls");
-			cout << "Thank you for using Save-More. Good Bye!" << endl;
-			answer = false;
-		}
-		else
-		{
-			system("cls");
-			cout << "<ALERT> invalid entry. Please Try Again" << endl;
-			system("pause");
-			answer = true;
-		}
-			
-	} while (answer);
-    return 0;
+	cout << "Enter ammount you want to withdraw from savings account" << endl;
+	cin >> w;
+	SavingsAccount.withdraw(w+2);// withdraw fee
+	SavingsAccount.display();
+
+	system("pause");
+	system("cls");
+	cout << "Enter deposit for checking account: " << endl;
+	cin >> d;
+	CheckingAccount.deposit(d);
+
+	CheckingAccount.calcCheck();// checks for penalties 
+	CheckingAccount.display();
+	cout << "Enter ammount you want to withdraw from checking account" << endl;
+	cin >> w;
+	
+	CheckingAccount.withdraw(w);
+	CheckingAccount.display();
+	cout << " " << endl;
+	cout << "How many checks do you want to order" << endl;
+	cin >> order;
+
+	CheckingAccount.orderCheck(order);
+	CheckingAccount.display();
+
+	system("pause");
+
+	system("cls");
+	cout << "Enter deposit for Certicate of deposit: " << endl;
+	cin >> d;
+	CdAccount.deposit(d);
+
+
+	system("cls");
+	cout << "Enter years for Certficate of deposit: " << endl;
+	cin >> term;
+	system("pause");
+	
+	CdAccount.calcCd(term);
+	CdAccount.display();
+	system("pause");
+	system("cls");
+	cout << "Enter ammount you want to withdraw from Certificate of Deposit: " << endl;
+	cin >> w;
+
+	CdAccount.withdraw(w*1.1);
+
+
+	SavingsAccount.display();
+	CheckingAccount.display();
+	CdAccount.display();
+
 }
 
 
